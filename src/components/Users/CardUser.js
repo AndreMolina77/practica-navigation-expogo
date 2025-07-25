@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Buttons from "../Buttons";
  
-const CardUser = ({ user }) => {
+const CardUser = ({ user, handleDelete, onEdit }) => {
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>{user.nombre}</Text>
@@ -11,11 +11,12 @@ const CardUser = ({ user }) => {
       <View style={styles.buttonContainer}>
         {/* Botón para editar */}
         <TouchableOpacity
-          style={styles.button}
-          onPress={() => handleUpdate(user.id)} // Pasa el id del usuario para actualizar
-        >
-          <Text style={styles.buttonText}>Editar</Text>
-        </TouchableOpacity>
+        style={styles.button}
+        onPress={() => onEdit(user)} // ✅ usar onEdit en lugar de handleUpdate
+         >
+  <Text style={styles.buttonText}>Editar</Text>
+</TouchableOpacity>
+
         {/* Botón para eliminar */}
         <TouchableOpacity
           style={styles.button}

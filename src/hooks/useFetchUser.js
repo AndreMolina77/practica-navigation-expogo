@@ -60,59 +60,73 @@ const useFetchUser = () => {
     }
   };
 
-  //Editar el Usuario
+  //Eliminar el Usuario
   const handleDelete = async (id) => {
     try {
+      // Verificar si el usuario existe antes de intentar eliminarlo
+      const checkResponse = await fetch(`https://retoolapi.dev/zZhXYF/movil/${id}`);
+  
+      if (!checkResponse.ok) {
+        Alert.alert("Error", "El usuario ya no existe o fue eliminado.");
+        return;
+      }
+  
+      // Intentar eliminar
       const response = await fetch(`https://retoolapi.dev/zZhXYF/movil/${id}`, {
         method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        },
       });
-      
-     if (response.ok) {
-      console.log('Item eliminado correctamente');
-    } else {
-      console.error('Error al eliminar el item');
+  
+      if (response.ok) {
+        Alert.alert("Éxito", "Usuario eliminado correctamente");
+        fetchUsuarios(); // Recargar lista actualizada
+      } else {
+        const errorText = await response.text();
+        console.error('❌ Error al eliminar el item:', response.status, errorText);
+        Alert.alert("Error", "No se pudo eliminar el usuario.");
+      }
+    } catch (error) {
+      console.error('❗ Error inesperado al eliminar:', error.message);
+      Alert.alert("Error", "Ocurrió un error al eliminar el usuario.");
     }
-  } catch (error) {
-    console.error('Hubo un error en la solicitud:', error);
-  }
-  };  
+  };
+  
+  
+  
 
   //Editar el usuario
-  const handleUpdate = async(id) => {
+  const handleUpdate = async (id, updatedData) => {
+    const { nombre, edad, correo } = updatedData;
+  
     if (!nombre || !edad || !correo) {
-    Alert.alert("Error", "Por favor, completa todos los campos");
-    return;
-  }
-
-    try{
+      Alert.alert("Error", "Por favor, completa todos los campos");
+      return;
+    }
+  
+    try {
       const response = await fetch(`https://retoolapi.dev/zZhXYF/movil/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          nombre, edad: parseInt(edad),
+          nombre,
+          edad: parseInt(edad),
           correo,
         }),
       });
+  
       if (response.ok) {
-      Alert.alert("Éxito", "Usuario actualizado correctamente");
-      setNombre("");
-      setEdad("");
-      setCorreo("");
-      fetchUsuarios(); // Actualizar la lista de usuarios después de la edición
-    } else {
-      Alert.alert("Error", "No se pudo actualizar el usuario");
+        Alert.alert("Éxito", "Usuario actualizado correctamente");
+        fetchUsuarios(); // Recargar lista
+      } else {
+        Alert.alert("Error", "No se pudo actualizar el usuario");
+      }
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
+      Alert.alert("Error", "Ocurrió un error al actualizar los datos");
     }
-    }
-    catch (error) {
-    console.error("Error al actualizar el usuario:", error);
-    Alert.alert("Error", "Ocurrió un error al actualizar los datos");
-   }
   };
+  
 
 
   // Ejecutar al cargar componente

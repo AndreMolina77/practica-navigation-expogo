@@ -77,11 +77,12 @@ const ShowUser = () => {
           data={usuarios}
           keyExtractor={(user) => user.id.toString()}
           renderItem={({ item }) => (
-          <CardUser 
-          user={item}
-          handleDelete={handleDelete}
-          handleUpdate={handleUpdate} 
+            <CardUser 
+            user={item}
+            handleDelete={handleDelete}
+            onEdit={handleEdit} // ✅ esta es la función que prepara la edición
           />
+          
       )}
           contentContainerStyle={styles.listContainer}
         />
